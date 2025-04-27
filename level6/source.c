@@ -3,30 +3,18 @@
 #include <string.h>
 #include <unistd.h>
 
-void n(void)
+int n(void) { return system("/bin/cat /home/user/level7/.pass"); }
 
-{
-  system("/bin/cat /home/user/level7/.pass");
-  return;
-}
+int m() { return (puts("Nope")); }
 
-void m(void *param_1, int param_2, char *param_3, int param_4, int param_5)
+int main(int ac, char **av) {
+  char *dest;
+  int (**func_ptr)();
 
-{
-  puts("Nope");
-  return;
-}
+  dest = (char *)malloc(0x40);
+  func_ptr = (void *)malloc(4);
+  *func_ptr = (int (*)())m;
 
-int main(int param_1, char **param_2)
-
-{
-  char *__dest;
-  void *puVar1;
-
-  __dest = (char *)malloc(0x40);
-  puVar1 = (void *)malloc(4);
-  puVar1 = &m;
-  strcpy(__dest, *(char **)(param_2 + 4));
-  *puVar1();
-  return;
+  strcpy(dest, *(char **)(av[1]));
+  return (*func_ptr)();
 }

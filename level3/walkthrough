@@ -1,0 +1,23 @@
+decompile ./level3
+
+program use fgets which is safe
+printf directly the buffer of gets which is unsafe: Format string attack
+
+the program compare a global variable m with 64
+
+the goal is to write into the variable m the value 64 by formating the buffer with %n
+%n write the number of bytes currently write by printf into the variable given
+$ is used to the the nth element of the stack
+
+we first write the adress of the variable m (got it with gdb) to put it on the stack
+then we write 60 characters
+that makes it 64 characters total!
+then we get the number of argument on the stock of our adress with: "4444 %1$n %2$n ..."
+                                                                    value to look for + %(n-th element)$n 
+
+here its the 4th
+so our payload is : adress of m + %60c + %4$n
+%60c to write 60 + adress of m = 64 char into the 4th element of the stack which is the beginning of this buffer
+
+python -c 'import struct; print struct.pack("<I", 0x804988c) + "%60c%4$n' > /tmp/lvl3
+

@@ -1,0 +1,23 @@
+decompile ./level2
+gets() is weak but there is check for the return adress of p() (check if its on the stack with & 0xb000000)
+no function that call execve, we will have to inject it ourselves with a shellcode
+a shellcode is machine code for the instruction that we want the program to execute
+Here we want the program to do a execve("/bin/sh") 
+we can inject the shellcode in 3 places here in this program:   -the buffer of gets() on the stack
+                                                                -an env variable
+                                                                -on the heap because of the strdup of the buffer of gets()
+
+the easiest is on the heap with the strdup;
+the buffer of gets() doesnt work because of the check
+an env variable could work but you have to add a lot of bytes to the env for it to beyond 0xb000000
+
+a shellcode is best injected with a nospled: a plage of nop instruction (\x90)
+it makes it easier to target the adress of the shellcode by just targeting an adress in the nospeld
+
+check the adress on the heap with either gdb or ltrace
+find where the EIP is with pattern and check with gdb where its segfault
+so we inject a plage of \x90 + our shellcode + padding until the IEP adress + adress on the heap to overwrite the IEP
+
+
+
+python -c 'import struct; print "\x90" \* 20 + "\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\x99\xb0\x0b\xcd\x80"+ "A" \* (60 - 20 - 24) + struct.pack("<I", 0x0804a008)' > /tmp/lv2

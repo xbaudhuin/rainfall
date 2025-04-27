@@ -1,0 +1,4 @@
+open gdb ./level0
+noticed cmp with 0x1a7 of atoi(av[1])
+try ./level0 423    423 = 0x1a7
+pass!

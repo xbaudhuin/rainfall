@@ -1,0 +1,13 @@
+decompile ./level8
+
+commands are:
+- "auth "   => allocate variable auth
+- "reset"   => free auth
+- "service" => strdup(str)
+- "login"   => if (int *)(auth + 8) != 0 system("/bin/sh") 
+
+auth is on the heap so the goal is to make auth + 8 != 0
+- we allocate auth via "auth " to make it on the heap
+- we use "service" and overflow the input buffer to allocate with the strdup(str)
+- login
+

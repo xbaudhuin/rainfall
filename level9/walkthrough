@@ -1,0 +1,29 @@
+decompile ./level9
+
+it's a cpp executable
+there is a class N which has an int and a buffer[100]
+N has the operator+ and - done 
+and a function setAnnotation which writes into the buffer (av[1])
+we can overflow this buffer (no check on the size of the buffer)
+
+N has a vtable: virtual table: a function pointer pointing to its virtual function
+in this case the virtual function is the operator+
+N(5) and N(6) is called 
+then N(5)->setAnnotation(av[1])
+and return (N(5) + N(6))
+
+the goal here is to put a shellcode in the buffer via av[1]
+and also overwrite the vtable of N(6) to make it point to our shellcode
+
+to get the precise size, the vtable pointer is always at the start of the class in memory
+
+so the goal here is to redirect the vtable pointer to a another adress which will point to our shellcode
+
+so the total size of av[1] is the adress of N(6) - N(5).buffer + 4 bytes (to rewrite the adress)
+
+and the adress at the end of av[1] is either in the nospled ov av[1]
+                                      or in the nospled of N(5) buffer
+
+av[1] = fake vtable which points to our shellcode + nospled + shellcode + padding 
+        + adress fake vtable
+

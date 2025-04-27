@@ -4,8 +4,8 @@
 #include <string.h>
 
 void p(void) {
-  void *return_addr;
   char str[76];
+  void *return_addr;
   fflush(stdout);
   gets(str);
   return_addr = __builtin_return_address(0);

