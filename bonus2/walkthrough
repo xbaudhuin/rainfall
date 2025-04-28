@@ -1,0 +1,42 @@
+decompile ./bonus2
+
+several strncpy and a strcat
+all linked to stack buffer which are possible to overflow
+
+we will try to overflow the buffer in greetuser
+
+this buffer is : -6 char if language = 0
+		 -13 chars if language = 1 or 2
+and then:		 
+- at most 40 char from av[1] from the first strncpy
+- at most 32 chars from av[2] from the 2nd strncpy
+ 
+dest in greetuser is 64 bytes
+but there is another buffer of 4 and another 4 bytes of another variable
+and finally the ebp to overwrite
+
+so we have to overwrite 64 + 4 + 4 + 4 + adress of shellcode
+			76 + shellcode
+
+
+if language != 0 only 63 bytes to overwrite
+=> 40 with av[1]
+=> 23 + adress shellcode with av[2]
+
+we can put the shellcode either in av[1] or the env
+and get the adress of the main_buffer or greetuser_buffer (!to first 13 chars)
+
+export LANG=$(python -c 'print "nl" + shellcode'); shellcode unecessary if aim the stack buffer
+av[1] = (nospled + shellcode) or padding : total 40 bytes
+av[2] = 23 padding + adress shellcode
+
+aiming the stack buffer is a bit finicky (gdb and normal execution migh differ in their adresses)
+and the nospled is relatively small 
+so it's easier to aim at the env:
+
+for env:
+	export LANG=$(python -c 'print "ni"+"\x90"*1024+"SHELLCODE"')
+	get lang adress in gdb (p/x getenv("LANG"))
+	pick an adress in the middle of the nospled (+ 0x200)
+	./bonus2 $(python -c 'print "A" * 40') $(python -c 'print "B" * 23 + "adress"')
+

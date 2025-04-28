@@ -1,0 +1,17 @@
+decompile ./bonus3
+
+the program read 66 chars of the file .pass into a zero'ed buffer
+then it puts a '\0' in the 65e char in the buffer
+then it puts a '\0' in the atoi(av[1]) char in the buffer
+
+it then read the end of the file .pass
+and then strcmp buffer and av[1]
+
+the main vulnerability is that atoi("") return 0
+so if put an empty string av[1] 
+strcmp will compare buffer[0] = '\0'
+	       with av[1][0]  = '\0'
+	and will return 0
+so the execve will be the following instruction
+
+=> ./bonus3 ""

@@ -1,0 +1,16 @@
+decompile ./bonus1
+
+nb = atoi(av[1]) should be number < 9
+and nb final value should be: 1464814662 = 0x574f4c46
+the goal is to use the memcpy to change the value of nb
+there is a buffer of 40 chars before nb on the stack
+
+
+memcpy take nb *4 as size:
+we can underflow nb *4 so when it is converted to unsigned int it will = 44
+44 for the size of buff + 4
+
+2 possible value according to our small program
+so the payload will be:
+av[1] = "value"
+av[2] = 40 chars as paddings + "\x46\x4c\x4f\x57" (bytes value)

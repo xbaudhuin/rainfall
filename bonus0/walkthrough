@@ -1,0 +1,23 @@
+decompile ./bonus0
+
+2 read on stdin with strncpy
+=> vulnerability of there is no \n in the first 20 chars
+
+if we put 2 buffers of 20 chars each we get:
+output: buffer1buffer2 buffer2
+
+the goal is to rewrite the IEP of main to our shellcode
+2 place possible for the shellcode:
+- buffer of p well after the first 20 char (so after a nospled)
+- as an env variable
+
+if we try with 2 different pattern for the 1st and 2nd input in GDB
+with memcpy to set the buffer, we can find the offset for the IEP
+
+the IEP is at +9 on the 2nd buffer
+
+so our payload is:
+(python -c 'print "NOSPLED" + "SHELLCODE"';
+ python -c 'print "PADDING" * 9' 
+ 	+ "Adress shellcode(either first input after +20 or env)" 
+ 	+ "PADDING" * 7') | ./bonus0

@@ -6,12 +6,13 @@
 int language = 0;
 
 int greetuser(char src) {
+
+  char dest[64];
   int a;
   char b[4];
-  char dest[64];
 
   if (language == 1) {
-    strcpy(dest, "Hyvää päivää");
+    strcpy(dest, "Hyvää päivää ");
   } else if (language == 2) {
     strcpy(dest, "Goedemiddag! ");
   } else if (language == 0) {
@@ -30,7 +31,7 @@ int main(int ac, char **av) {
     return 1;
   memset(dest, 0, sizeof(dest));
   strncpy(dest, av[1], 40);
-  strncpy(&dest[40], av[1], 32);
+  strncpy(&dest[40], av[2], 32);
   lang = getenv("LANG");
   if (lang) {
     if (memcmp(lang, "fi", 2) == 0) {
@@ -39,6 +40,6 @@ int main(int ac, char **av) {
       language = 2;
     }
   }
-  memcpy(str, dest, sizeof(str)); // adress of memcpy: &stack0xffffff50
+  memcpy(str, dest, sizeof(str)); // adress of memcpy: &stack0xffffff50 not plt
   return (greetuser(str[0]));
 }

