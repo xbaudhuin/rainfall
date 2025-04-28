@@ -24,6 +24,6 @@ so the total size of av[1] is the adress of N(6) - N(5).buffer + 4 bytes (to rew
 and the adress at the end of av[1] is either in the nospled ov av[1]
                                       or in the nospled of N(5) buffer
 
-av[1] = fake vtable which points to our shellcode + nospled + shellcode + padding 
-        + adress fake vtable
+av[1] = fake vtable which points further in the same buffer (at least 4 byte further)
+        + nospled + shellcode + padding + adress fake vtable
 
